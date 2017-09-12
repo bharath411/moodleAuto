@@ -2,6 +2,7 @@ package com.slokam.moodle.testscripts;
 
 import java.util.concurrent.TimeUnit;
 
+import org.apache.poi.ss.usermodel.CellType;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -9,6 +10,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.slokam.moodle.utils.io.excel.ReadExcel;
+import com.slokam.moodle.utils.io.excel.WriteExcel;
 
 public class TestMoodleLogin {
 	public WebDriver driver = null;
@@ -34,6 +36,15 @@ public class TestMoodleLogin {
 
 		if (isElementPresent(By.id("loginerrormessage"))) {
 			String actualMessage = getErrorMessage();
+			
+			WriteExcel excel  = new WriteExcel();
+			excel.insertValue(1, 4, CellType.STRING	, "Result");
+			if(actualMessage.equals(validationMessage)){
+				excel.insertValue(2, 4, CellType.STRING	, "PASS");
+			}else{
+				excel.insertValue(2, 4, CellType.STRING	, "FAIL");
+			}
+			excel.writeFinal();
 			Assert.assertEquals(actualMessage, validationMessage);
 		} else {
 			validateProfileMessage();
